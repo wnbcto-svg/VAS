@@ -2,18 +2,33 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VAS評価フォーム</title>
   <style>
     body {
-      font-family: sans-serif;
-      margin: 40px;
+      font-family: Arial, sans-serif;
+      padding: 1em;
     }
+
     .container {
       max-width: 400px;
       margin: auto;
     }
+
+    .vas-scale {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .vas-label {
+      width: 80px;
+      text-align: center;
+      font-size: 0.9em;
+    }
+
     input[type="range"] {
-      width: 100%;
+      flex: 1;
     }
   </style>
 </head>
@@ -24,43 +39,33 @@
     <label for="subjectId">被験者ID：</label><br>
     <input type="text" id="subjectId" name="subjectId" readonly><br><br>
 
-    <label for="vas">痛みの程度：</label><br>
-    <input type="range" id="vas" min="0" max="100" value="50">
-    <!-- <p>現在のVAS値：<span id="vasValue">50</span></p> -->
+    <label for="vas">現在の痛みの程度：</label>
+    <div class="vas-scale">
+      <span class="vas-label left">全くない</span>
+      <input type="range" id="vas" name="vas" min="0" max="100" value="50">
+      <span class="vas-label right">非常に強い</span>
+    </div>
 
+    <br>
     <button onclick="submitForm()">送信</button>
   </div>
 
   <script>
-    window.onload = function () {
-      const urlParams = new URLSearchParams(window.location.search);
-      const userId = urlParams.get('id');
-      if (userId) {
-        document.getElementById("subjectId").value = userId;
-      }
-    }
-
+    // 例: URLパラメータからID取得
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    document.getElementById('subjectId').value = id || '';
+    
     function submitForm() {
       const subjectId = document.getElementById('subjectId').value;
       const vasValue = document.getElementById('vas').value;
-
-      fetch('https://script.google.com/macros/s/AKfycbze2CtIJLxy5ue1pAIPzKyIs0DItowDgcXOVixEacgsdRY08XFxtI1x_pWSqBjoavgj/exec', {
-        method: 'POST',
-        body: new URLSearchParams({
-          'subjectId': subjectId,
-          'vasValue': vasValue
-        })
-      })
-      .then(response => response.text())
-      .then(result => {
-        alert('送信完了しました。ご協力ありがとうございます。');
-        document.getElementById('vas').value = 50;
-      })
-      .catch(error => {
-        alert('送信失敗：' + error);
-      });
+      alert(`ID: ${subjectId}, VAS値: ${vasValue}`);
+      // データ送信処理をここに追加
     }
   </script>
 </body>
 </html>
+
+
+
 
